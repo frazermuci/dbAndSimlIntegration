@@ -82,7 +82,6 @@
     <Compile Include="Element.cs" />
     <Compile Include="HtmlMessager.cs" />
     <Compile Include="KeyWordFinder.cs" />
-    <Compile Include="KeyWordFinderUserBot.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParserWrapper.cs" />
     <Compile Include="Program.cs" />
@@ -90,6 +89,8 @@
     <Compile Include="Query.cs" />
     <Compile Include="QueryGenerator.cs" />
     <Compile Include="QueryHandler.cs" />
+    <Compile Include="SentenceBoiler.cs" />
+    <Compile Include="SentenceBoilerUserBot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

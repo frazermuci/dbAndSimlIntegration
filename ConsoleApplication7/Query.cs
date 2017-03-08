@@ -13,13 +13,17 @@ namespace Test
         public Tuple<int, bool> quantityOfResponses { get; set; }
         public string resourceExpected { get; set; }
 
+        public string originalSentence { get; set; }
+
         public Query(List<Attrib> attributeList, 
                      Tuple<int,bool> quantityOfResponses, 
-                     string resourceExpected)
+                     string resourceExpected,
+                     string originalSentence)
         {
             this.attributeList = attributeList;
             this.quantityOfResponses = quantityOfResponses;
             this.resourceExpected = resourceExpected;
+            this.originalSentence = originalSentence;
         }
     }
 }

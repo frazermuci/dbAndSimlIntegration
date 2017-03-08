@@ -10,60 +10,85 @@ namespace Test
     {
         Func<string, string> stringOp;
         List<Query> queries;
-        KeyWordFinder kwf;
-		DataAccess dA;
+        SentenceBoiler sb;
+        DataAccess dA;
 
         public QueryHandler(
-							DataAccess dA,
-							KeyWordFinder kwf, 
-							Func<string, string> stringOp
-							) //later associate results with
+                            DataAccess dA,
+                            SentenceBoiler sb,
+                            Func<string, string> stringOp
+                            ) //later associate results with
         {                                                                               //query
             this.dA = dA;
-            this.kwf = kwf;
-			this.stringOp = stringOp;
+            this.sb = sb;
+            this.stringOp = stringOp;
             this.queries = new List<Query>();
         }
 
         private void genQueries(string[] sentences)
         {
-            QueryGenerator queryGen = new QueryGenerator(kwf);
+            QueryGenerator queryGen = new QueryGenerator(sb);
             foreach (string sentence in sentences)
             {
                 queries.Add(queryGen.queryGen(sentence));
             }
         }
 
-        private async Task<Tuple<string,string>[]> sendOff()
+        private async Task<List<Tuple<string, string[]>>[]> sendOff()
         {
-            List<Task<Tuple<string,string>>> issuedQueries = new List<Task<Tuple<string,string>>>();
+            List<Task<List<Tuple<string, string[]>>>> issuedQueries = new List<Task<List<Tuple<string, string[]>>>>();
             foreach (Query q in queries)
             {
-				foreach(Attrib a in q.attributeList)
-				{
-					issuedQueries.Add
-					(
-							Task<Tuple<string,string>>.Factory.StartNew
-							(
-								()=>{ return new Tuple<string,string>(a.value, string.Join("\n",dA.query(q).Values)); }
-							)
-					);
-				}
-               // Task.
+               // foreach (Attrib a in q.attributeList)
+                //{
+                    
+                    issuedQueries.Add
+                    (
+                            Task<List<Tuple<string, string[]>>>.Factory.StartNew
+                            (                          
+                             
+                                () => {
+                                        List<Tuple<string, string[]>> ltup = new List<Tuple<string, string[]>>();
+                                        
+                                        foreach (var kvpair in dA.query(q))
+                                        {
+                                            List<string> temp = new List<string>();
+                                            foreach (var s in kvpair.Value)
+                                            {
+                                                temp.Add(s);
+                                            }
+                                            ltup.Add(new Tuple<string, string[]>(q.originalSentence, temp.ToArray()));
+                                        }
+                                        return ltup;
+                                       }
+                            )
+                    );
+                //}
+                // Task.
             }
             return await Task.WhenAll(issuedQueries);
         }
 
-        public List<Tuple<string,string>> handleQuery(string[] sentences)
+        public List<List<Tuple<string, string[]>>> handleQuery(string[] sentences)
         {
             genQueries(sentences);
-            List<Tuple<string,string>> retList = new List<Tuple<string,string>>();
-            Tuple<string,string>[] response = sendOff().Result;
-            foreach (Tuple<string,string> r in response)
+            List<List<Tuple<string, string[]>>> retList = new List<List<Tuple<string, string[]>>>();
+            List<Tuple<string, string[]>>[] response = sendOff().Result;
+            foreach (List<Tuple<string, string[]>> l in response)
             {
-               // string temp = r;
-                //new HTMLMessager().removeFromLine(ref temp);//re encapsulate in return val
-                retList.Add(new Tuple<string, string>(r.Item1, stringOp(r.Item2)));
+                List<Tuple<string, string[]>> lList = new List<Tuple<string, string[]>>();
+                foreach (var r in l)
+                {
+                    //refactor
+                    List<string> tempList = new List<string>();
+                    foreach (string s in r.Item2)
+                    {
+                        tempList.Add(stringOp(s));
+                    }
+                    //refactor
+                    lList.Add(new Tuple<string, string[]>(r.Item1, tempList.ToArray()));//stringOp(r.Item2)));
+                }
+                retList.Add(lList);
             }
             return retList;
         }

@@ -8,18 +8,18 @@ namespace Test
 {
     public class QueryGenerator
     {
-        private KeyWordFinder kwf;
+        private SentenceBoiler sb;
 
-        public QueryGenerator(KeyWordFinder kwf)
+        public QueryGenerator(SentenceBoiler sb)
         {
-            this.kwf = kwf;
+            this.sb = sb;
         }
 
         public Query queryGen(string sentence)
         {
             List<Attrib> attributeList = new List<Attrib>();
-            attributeList.Add(new Attrib("filePath", kwf.boilDown(sentence),false));
-            return new Query(attributeList, new Tuple<int, bool>(0, false), "text");
+            attributeList.Add(new Attrib("filePath", sb.boilDown(sentence),false));
+            return new Query(attributeList, new Tuple<int, bool>(0, false), "text",sentence);
         }
     }
 }

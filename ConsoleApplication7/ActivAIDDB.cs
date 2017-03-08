@@ -18,15 +18,15 @@ namespace Test
         // private int elementCounter;
         public ActivAIDDB()
         {
-            dblocation = "Server=.\\THESERVER;Database=NewDB;Integrated Security=true";
+            dblocation = "Server=.\\SQLEXPRESS;Database=NewDB;Integrated Security=false";
             // elementCounter = 0;
             builder = new SqlConnectionStringBuilder();
-            builder.DataSource = @"DEVIIX\SQLEXPRESS"; // CHANGE THIS TO YOUR OWN SERVER
+            builder.DataSource = @"MATTHEW-PC\SQLEXPRESS01"; // CHANGE THIS TO YOUR OWN SERVER
             //builder.DataSource = "IP Address\SQLEXPRESS, 49172"
-            builder.InitialCatalog = "ActivAID DB";
+            builder.InitialCatalog = "NewDB";
             builder.IntegratedSecurity = false;
-            builder.UserID = "sa";
-            builder.Password = "activaid";
+            builder.UserID = "sa1";
+            builder.Password = "hi";
 
         }
 
@@ -141,7 +141,6 @@ namespace Test
 
         public Dictionary<int, List<string>> getAllElements(string filepath)
         {
-            Console.WriteLine("here");
             Dictionary<int, List<string>> elementList = new Dictionary<int, List<string>>();
 
             int fileid = GetFileId(filepath);
@@ -167,7 +166,6 @@ namespace Test
                     }
                 }
             }
-            Console.WriteLine("here after");
             return elementList;
         }
 
