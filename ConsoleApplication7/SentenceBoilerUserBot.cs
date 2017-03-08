@@ -17,16 +17,20 @@ namespace Test
                 SimlBot Chatbot = new SimlBot();
                 Chatbot.PackageManager.LoadFromString(File.ReadAllText(fileName));
                 var result = Chatbot.Chat(sentence);
-                string[] outPut = result.BotMessage.Split(':');
-                Console.WriteLine(result.BotMessage);
-                //int test = Convert.ToInt32(outPut[0]);
-                //maxFile = max < test ? outPut[1] : maxFile;
-                //max = max < test ? test : max;
-                //Console.WriteLine(result.BotMessage);
+                string outString = result.BotMessage;
+                if (!outString.Contains(";"))
+                {
+                    continue;
+                }                
+                string[] output = result.BotMessage.Split(';');
+                var lastString = output[output.Length-2];
+                var response = lastString.Split(':');
+                int test = Convert.ToInt32(response[0]);
+                maxFile = max < test ? response[1] : maxFile;
+                max = max < test ? test : max;
             }
             //return new Tuple<string,bool>(maxFile, true);
-            //return maxFile;
-            return "NewUser.html";
+            return maxFile;
         }
     }
 }
