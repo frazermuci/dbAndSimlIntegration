@@ -26,7 +26,6 @@ namespace Test
             while (true)
             {
                 var paragraph = Console.ReadLine();
-                var modelPath = "..\\..\\..\\Resources\\Models";
                 var sentences = paragraph.Split('.');
                 var qHandler = new QueryHandler(dA,sb, func);
                 int max = -99;
